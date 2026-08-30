@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NL2SQL 智能报表Agent — 刘雨琦 / Shian</title>
+  <meta name="description" content="NL2SQL 智能报表Agent：用自然语言替代复杂点击流程，直接说“上学期数学平均分”，秒级获得数据图表。某教育机构内部项目，已脱敏处理。">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap">
+      <a class="nav-logo" href="../index.html">刘雨琦<span>/ Shian</span></a>
+      <nav class="nav-links" aria-label="主导航">
+        <a href="../about.html">关于</a>
+        <a href="../projects.html" class="active">项目</a>
+        <a href="../contact.html">联系</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section wrap">
+    <div class="detail-col">
+      <div class="detail-head">
+        <a class="back-link" href="../projects.html">← 返回项目列表</a>
+        <h1 class="detail-title">NL2SQL 智能报表Agent</h1>
+        <p class="detail-sub">AI 产品 · 某教育机构内部项目，已脱敏处理</p>
+      </div>
+
+      <div class="detail-hero">
+        <div class="viz" data-viz="nl2sql"></div>
+      </div>
+
+      <div class="detail-cols">
+        <div>
+          <span class="card-type">产品版</span>
+          <p class="desc">原本教务SaaS报表界面复杂，教务人员需要长时间学习操作路径。我设计的智能报表Agent用自然语言替代复杂点击流程——直接说“上学期数学平均分”，秒级获得数据图表。这不是替代SQL工具，是从“学习界面”到“直接对话”新一代交互范式。</p>
+        </div>
+        <div>
+          <span class="card-type">技术版</span>
+          <p class="desc">FastAPI后端 + DeepSeek-V3 LLM意图识别 + 规则引擎做Cube路由，避免LLM直接生成SQL的安全风险。4个版本迭代：v1关键词匹配 → v2预定义视图 → v3 Schema RAG → v4 Cube查询 + RLS行级权限注入。</p>
+          <div class="tag-row">
+            <span class="tag">FastAPI</span>
+            <span class="tag">DeepSeek-V3</span>
+            <span class="tag">规则引擎</span>
+            <span class="tag">Schema RAG</span>
+            <span class="tag">Cube</span>
+            <span class="tag">RLS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-links">
+        <p class="card-note">某教育机构内部项目，已脱敏处理 · 无公开 Demo</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-contact">
+        <a href="mailto:yuqi_liu1993@hotmail.com">yuqi_liu1993@hotmail.com</a>
+        <a href="https://github.com/1000li" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="foot-copy">© 2026 刘雨琦 / Shian</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>龙虾模拟器 — 刘雨琦 / Shian</title>
+  <meta name="description" content="龙虾模拟器：基于代理的仿真（ABM）模拟封闭种群在资源波动下的生存策略演化。页面内嵌可交互的终端叙事 Demo。">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap">
+      <a class="nav-logo" href="../index.html">刘雨琦<span>/ Shian</span></a>
+      <nav class="nav-links" aria-label="主导航">
+        <a href="../about.html">关于</a>
+        <a href="../projects.html" class="active">项目</a>
+        <a href="../contact.html">联系</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section wrap">
+    <div class="detail-col">
+      <div class="detail-head">
+        <a class="back-link" href="../projects.html">← 返回项目列表</a>
+        <h1 class="detail-title">龙虾模拟器</h1>
+        <p class="detail-sub">开源 / 学术 · ABM 仿真 · 下面是可交互的终端叙事切片</p>
+      </div>
+
+      <div class="demo" id="lobster-demo">
+        <div class="demo-term" id="ld-term">
+          <div class="demo-bar"><i></i><i></i><i></i><em>lobster-sim — zsh</em></div>
+          <div class="demo-body">
+            <div class="demo-out" id="ld-out" aria-live="polite"></div>
+            <div class="demo-deco" aria-hidden="true">
+              <div class="demo-lob" id="ld-lob"></div>
+              <div class="demo-grass"><i></i><i></i><i></i><i></i></div>
+              <div class="demo-bubbles"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-actions" id="ld-actions">
+          <button type="button" data-act="1"><b>[1]</b> 处决</button>
+          <button type="button" data-act="2"><b>[2]</b> 投喂 <span>+15资源</span></button>
+          <button type="button" data-act="3"><b>[3]</b> 隔离</button>
+          <button type="button" data-act="4"><b>[4]</b> 跳过本回合</button>
+        </div>
+        <p class="demo-hint">点击按钮或按 1-4 操作 · Enter 继续 · 播放中点击终端可跳过</p>
+      </div>
+
+      <div class="detail-cols">
+        <div>
+          <span class="card-type">产品版</span>
+          <p class="desc">资源有限时，个体应该选择合作还是竞争？我用基于代理的仿真（ABM）模拟了一个封闭种群在资源波动下的生存策略演化——从鹰派掠夺到鸽派分享，不同派系、规模、资源条件下的动态平衡。不仅验证博弈论直觉，更发现了一些反直觉的群体行为模式。</p>
+        </div>
+        <div>
+          <span class="card-type">技术版</span>
+          <p class="desc">Python + Mesa框架实现完整状态机，模拟个体决策（抢夺/分享/繁殖/死亡）。参数化实验覆盖派系比例、资源总量、种群规模等多维度变量，可复现、可扩展。研究成果整理为working paper，代码已开源。</p>
+          <div class="tag-row">
+            <span class="tag">Python</span>
+            <span class="tag">Mesa</span>
+            <span class="tag">Agent-Based Modeling</span>
+            <span class="tag">博弈论</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-links">
+        <div class="card-links">
+          <a href="https://github.com/1000li/abm-steady-state-lock" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-contact">
+        <a href="mailto:yuqi_liu1993@hotmail.com">yuqi_liu1993@hotmail.com</a>
+        <a href="https://github.com/1000li" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="foot-copy">© 2026 刘雨琦 / Shian</p>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/lobster.js"></script>
+</body>
+</html>

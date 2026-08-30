@@ -1,0 +1,12 @@
+# 本地素材与内部文档（不进入公开仓库）
+assets/
+PRD.md
+lobster-demo-design.md
+
+# 验证截图
+.shots/
+
+# 系统与临时文件
+Thumbs.db
+.DS_Store
+.venv*/
