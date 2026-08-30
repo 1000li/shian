@@ -109,7 +109,7 @@ a {
 }
 
 /* ---------- 通用区块 ---------- */
-.section { padding: 96px 0; }
+.section { padding-top: 96px; padding-bottom: 96px; }
 
 .section + .section { padding-top: 0; }
 
@@ -128,7 +128,8 @@ a {
 
 /* ---------- 首页 Hero ---------- */
 .hero {
-  padding: 128px 0 96px;
+  padding-top: 128px;
+  padding-bottom: 96px;
   text-align: center;
 }
 
@@ -1448,8 +1449,9 @@ a {
 
 /* ---------- 移动端微调 ---------- */
 @media (max-width: 600px) {
-  .section { padding: 72px 0; }
-  .hero { padding: 88px 0 72px; }
+  .wrap { padding: 0 32px; }
+  .section { padding-top: 72px; padding-bottom: 72px; }
+  .hero { padding-top: 88px; padding-bottom: 72px; }
   .hero-role {
     font-size: 14px;
     letter-spacing: .04em;
