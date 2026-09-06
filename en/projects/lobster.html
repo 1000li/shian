@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lobster Simulator — Shian Liu</title>
+  <meta name="description" content="Lobster Simulator: agent-based modeling (ABM) of how survival strategies evolve in a closed population under resource fluctuation — with an interactive terminal-narrative demo embedded on the page.">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap">
+      <a class="nav-logo" href="../index.html">Shian Liu</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../about.html">About</a>
+        <a href="../projects.html" class="active">Projects</a>
+        <a href="../contact.html">Contact</a>
+        <a class="lang-switch" href="../../projects/lobster.html" lang="zh-CN" hreflang="zh-CN">中文</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section wrap">
+    <div class="detail-col">
+      <div class="detail-head">
+        <a class="back-link" href="../projects.html">← Back to all projects</a>
+        <h1 class="detail-title">Lobster Simulator</h1>
+        <p class="detail-sub">Open source / research · ABM simulation · an interactive terminal-narrative slice below</p>
+      </div>
+
+      <div class="demo" id="lobster-demo">
+        <div class="demo-term" id="ld-term">
+          <div class="demo-bar"><i></i><i></i><i></i><em>lobster-sim — zsh</em></div>
+          <div class="demo-body">
+            <div class="demo-out" id="ld-out" aria-live="polite"></div>
+            <div class="demo-deco" aria-hidden="true">
+              <div class="demo-lob" id="ld-lob"></div>
+              <div class="demo-grass"><i></i><i></i><i></i><i></i></div>
+              <div class="demo-bubbles"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-actions" id="ld-actions">
+          <button type="button" data-act="1"><b>[1]</b> Cull</button>
+          <button type="button" data-act="2"><b>[2]</b> Feed <span>+15 resources</span></button>
+          <button type="button" data-act="3"><b>[3]</b> Isolate</button>
+          <button type="button" data-act="4"><b>[4]</b> Skip turn</button>
+        </div>
+        <p class="demo-hint">Click buttons or press 1–4 · Enter to continue · click the terminal to skip playback</p>
+      </div>
+
+      <div class="detail-cols">
+        <div>
+          <span class="card-type">Product</span>
+          <p class="desc">When resources are scarce, should an individual cooperate or compete? I used agent-based modeling (ABM) to simulate how survival strategies evolve in a closed population under resource fluctuation — from hawkish grabbing to dovish sharing, across factions, population sizes, and resource levels. It not only validates game-theory intuitions but also surfaced counterintuitive patterns of group behavior.</p>
+        </div>
+        <div>
+          <span class="card-type">Engineering</span>
+          <p class="desc">A full state machine built with Python + the Mesa framework, simulating individual decisions (grab / share / reproduce / die). Parameterized experiments cover faction ratios, total resources, population size and more — reproducible and extensible. Findings were written up as a working paper; the code is open source.</p>
+          <div class="tag-row">
+            <span class="tag">Python</span>
+            <span class="tag">Mesa</span>
+            <span class="tag">Agent-Based Modeling</span>
+            <span class="tag">Game theory</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-links">
+        <div class="card-links">
+          <a href="https://github.com/1000li/abm-steady-state-lock" target="_blank" rel="noopener">GitHub →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-contact">
+        <a href="mailto:yuqi_liu1993@hotmail.com">yuqi_liu1993@hotmail.com</a>
+        <a href="https://github.com/1000li" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="foot-copy">© 2026 Shian Liu</p>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/lobster.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mingkeming — Shian Liu</title>
+  <meta name="description" content="Mingkeming: a 48-hour hackathon team project that turns short videos into personalized language textbooks — fast-paced learning paths, easy little stories, and matching exercises.">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap">
+      <a class="nav-logo" href="../index.html">Shian Liu</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../about.html">About</a>
+        <a href="../projects.html" class="active">Projects</a>
+        <a href="../contact.html">Contact</a>
+        <a class="lang-switch" href="../../projects/mingkeming.html" lang="zh-CN" hreflang="zh-CN">中文</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section wrap">
+    <div class="detail-col">
+      <div class="detail-head">
+        <a class="back-link" href="../projects.html">← Back to all projects</a>
+        <h1 class="detail-title">Mingkeming</h1>
+        <p class="detail-sub">Experimental · 48-hour hackathon team project — I led product &amp; design</p>
+      </div>
+
+      <div class="detail-hero">
+        <img src="../../images/mingkeming.webp" alt="Mingkeming key art: poster for a language-learning app">
+      </div>
+
+      <div class="detail-cols">
+        <div>
+          <span class="card-type">Product</span>
+          <p class="desc">A 48-hour hackathon team project where I led product and design. The premise: today's language textbooks are stale and out of tune with young people. Mingkeming turns short videos into personalized language textbooks — fast-paced learning paths, easy little stories, and matching exercises. It won the Intuition X hackathon's “Outstanding Product Award,” proving rapid idea-to-demo execution.</p>
+        </div>
+        <div>
+          <span class="card-type">Engineering</span>
+          <p class="desc">STT extracts dialogue from videos → an LLM with prompt engineering rewrites narrative pacing and difficulty → TTS synthesizes the output. A pure front-end prototype, going from concept to demoable product within 48 hours.</p>
+          <div class="tag-row">
+            <span class="tag">STT</span>
+            <span class="tag">LLM</span>
+            <span class="tag">TTS</span>
+            <span class="tag">Prompt engineering</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-demo" id="mkm-demo">
+        <div class="course-demo-head">
+          <h2 class="showcase-title">Try it: a sample Mingkeming lesson</h2>
+          <span class="mkm-progress" id="mkm-progress"></span>
+        </div>
+        <p class="mkm-tip">Flip with Next / Prev · click a sentence to see the Chinese translation · solve the quiz to continue</p>
+        <div class="mkm-layout">
+          <div class="mkm-stage" aria-hidden="true">
+            <div class="mkm-stage-frame">
+              <img src="../../images/mkm-1.webp" alt="" class="on">
+              <img src="../../images/mkm-2.webp" alt="">
+              <video src="../../images/mkm-lava.mp4" poster="../../images/mkm-3.webp" autoplay muted loop playsinline></video>
+              <img src="../../images/mkm-4.webp" alt="">
+            </div>
+          </div>
+          <div class="mkm-story">
+            <div class="mkm-dots" id="mkm-dots" aria-hidden="true"></div>
+            <div class="mkm-flow" id="mkm-flow"></div>
+            <div class="mkm-pager">
+              <button class="mkm-prev" id="mkm-prev" type="button" disabled>← Prev</button>
+              <button class="mkm-next" id="mkm-next" type="button">Next →</button>
+            </div>
+            <p class="mkm-done" id="mkm-done"><b>3/3 · You finished the story</b> — Mingkeming turns little stories like this into language textbooks at scale.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-contact">
+        <a href="mailto:yuqi_liu1993@hotmail.com">yuqi_liu1993@hotmail.com</a>
+        <a href="https://github.com/1000li" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="foot-copy">© 2026 Shian Liu</p>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+  <script src="../../js/mingkeming.js"></script>
+</body>
+</html>

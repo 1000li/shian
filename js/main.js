@@ -10,6 +10,9 @@
   var REDUCED = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* 英文站（en/ 目录，<html lang="en">）切换字符串表 */
+  var EN = document.documentElement.lang === 'en';
+
   function wait(ms) {
     return new Promise(function (r) { setTimeout(r, ms); });
   }
@@ -97,27 +100,91 @@
     }
   ];
 
+  var NL_SAMPLES_EN = [
+    {
+      q: 'What was the average math score last term?',
+      sql: [
+        [{ t: '-- intent: score lookup ✓', cls: 'cm' }],
+        [{ t: 'SELECT', cls: 'kw' }, { t: ' AVG(score)' }],
+        [{ t: 'FROM', cls: 'kw' }, { t: ' exam_results' }],
+        [{ t: 'WHERE', cls: 'kw' }, { t: " term = 'last_term'" }]
+      ],
+      chart: 'bars',
+      data: [45, 70, 55, 90, 65],
+      cap: 'Bar chart · avg math score by grade',
+      time: '0.8s'
+    },
+    {
+      q: 'Score trend by class over the last 3 exams?',
+      sql: [
+        [{ t: '-- intent: trend compare ✓', cls: 'cm' }],
+        [{ t: 'SELECT', cls: 'kw' }, { t: ' exam, class, AVG(score)' }],
+        [{ t: 'FROM', cls: 'kw' }, { t: ' exam_results' }],
+        [{ t: 'GROUP BY', cls: 'kw' }, { t: ' class, exam' }],
+        [{ t: 'ORDER BY', cls: 'kw' }, { t: ' exam' }]
+      ],
+      chart: 'line',
+      data: [
+        { color: '#6C63FF', pts: '6,42 50,30 94,16' },
+        { color: '#3AA7FF', pts: '6,48 50,40 94,30' },
+        { color: '#F2A93B', pts: '6,36 50,44 94,36' }
+      ],
+      cap: 'Line chart · 3-exam trend by class',
+      time: '1.2s'
+    },
+    {
+      q: 'Pass rate by subject, Grade 3',
+      sql: [
+        [{ t: '-- intent: pass-rate compare ✓', cls: 'cm' }],
+        [{ t: 'SELECT', cls: 'kw' }, { t: ' subject,' }],
+        [{ t: '  AVG(', cls: '' }, { t: 'CASE', cls: 'kw' }, { t: ' WHEN score >= 60' }],
+        [{ t: '  ', cls: '' }, { t: 'THEN', cls: 'kw' }, { t: ' 1 ', cls: '' }, { t: 'ELSE', cls: 'kw' }, { t: ' 0 ', cls: '' }, { t: 'END', cls: 'kw' }, { t: ') AS pass_rate' }],
+        [{ t: 'FROM', cls: 'kw' }, { t: ' exam_results' }],
+        [{ t: 'WHERE', cls: 'kw' }, { t: " grade = 'grade_3' " }, { t: 'GROUP BY', cls: 'kw' }, { t: ' subject' }]
+      ],
+      chart: 'h',
+      data: [92, 85, 78, 71, 64],
+      cap: 'Bar chart · pass rate by subject',
+      time: '1.5s'
+    }
+  ];
+
+  var NL_TEXT = {
+    zh: {
+      input: '用户输入', system: '系统处理', output: '输出结果',
+      idle: '等待输入…', parse: '理解意图 → 生成 SQL', render: '渲染图表',
+      done: '✓ 完成 · '
+    },
+    en: {
+      input: 'User input', system: 'System', output: 'Output',
+      idle: 'Waiting for input…', parse: 'Parsing intent → generating SQL',
+      render: 'Rendering chart', done: '✓ Done · '
+    }
+  };
+
   function buildNl2sql(el) {
+    var SAMPLES = EN ? NL_SAMPLES_EN : NL_SAMPLES;
+    var T = EN ? NL_TEXT.en : NL_TEXT.zh;
     el.innerHTML =
       '<div class="nlf">' +
         '<div class="nlf-main">' +
           '<div class="nlf-pane">' +
-            '<div class="nlf-label">用户输入</div>' +
+            '<div class="nlf-label">' + T.input + '</div>' +
             '<div class="nlf-bubble"><span class="nlf-tt"></span><i class="nlf-caret"></i></div>' +
           '</div>' +
           '<div class="nlf-arrow"><span>→</span></div>' +
           '<div class="nlf-pane nlf-pane--wide">' +
-            '<div class="nlf-label">系统处理</div>' +
+            '<div class="nlf-label">' + T.system + '</div>' +
             '<pre class="nlf-code"></pre>' +
           '</div>' +
           '<div class="nlf-arrow"><span>→</span></div>' +
           '<div class="nlf-pane">' +
-            '<div class="nlf-label">输出结果</div>' +
+            '<div class="nlf-label">' + T.output + '</div>' +
             '<div class="nlf-chart nlf-chart--bars"></div>' +
             '<div class="nlf-cap"></div>' +
           '</div>' +
         '</div>' +
-        '<div class="nlf-status"><i class="nlf-dot"></i><span class="nlf-st">等待输入…</span></div>' +
+        '<div class="nlf-status"><i class="nlf-dot"></i><span class="nlf-st">' + T.idle + '</span></div>' +
       '</div>';
 
     var root = el.firstChild;
@@ -172,7 +239,7 @@
     }
 
     function finalFrame() {
-      var smp = NL_SAMPLES[0];
+      var smp = SAMPLES[0];
       tt.textContent = smp.q;
       code.innerHTML = sqlHtml(smp.sql);
       renderChart(smp);
@@ -187,7 +254,7 @@
       }
       arrows.forEach(function (a) { a.classList.add('on'); });
       dot.className = 'nlf-dot done';
-      st.textContent = '✓ 完成 · ' + smp.time;
+      st.textContent = T.done + smp.time;
     }
 
     if (REDUCED) { finalFrame(); return; }
@@ -219,8 +286,8 @@
       var g = ++gen;
       var si = 0;
       while (g === gen) {
-        var smp = NL_SAMPLES[si];
-        si = (si + 1) % NL_SAMPLES.length;
+        var smp = SAMPLES[si];
+        si = (si + 1) % SAMPLES.length;
 
         // 淡出清空 → 切入下一个样例
         main.style.opacity = '0';
@@ -230,7 +297,7 @@
         renderChart(smp);
         arrows.forEach(function (a) { a.classList.remove('on'); });
         dot.className = 'nlf-dot';
-        st.textContent = '等待输入…';
+        st.textContent = T.idle;
         main.style.opacity = '1';
         await wait(700); if (g !== gen) return;
 
@@ -239,7 +306,7 @@
 
         arrows[0].classList.add('on');
         dot.className = 'nlf-dot working';
-        st.textContent = '理解意图 → 生成 SQL';
+        st.textContent = T.parse;
         await wait(300); if (g !== gen) return;
 
         for (var li = 0; li < smp.sql.length; li++) {
@@ -248,60 +315,96 @@
         }
 
         arrows[1].classList.add('on');
-        st.textContent = '渲染图表';
+        st.textContent = T.render;
         await wait(350); if (g !== gen) return;
 
         if (!await growChart(smp, g)) return;
 
         dot.className = 'nlf-dot done';
-        st.textContent = '✓ 完成 · ' + smp.time;
+        st.textContent = T.done + smp.time;
         await wait(2800); if (g !== gen) return;
       }
     })();
   }
 
-  /* ---------- 排课引擎：深色数据艺术 求解动画 ---------- */
+  /* ---------- 排课引擎：经典俄罗斯方块 求解动画 ----------
+     8×6 网格 = 12 块四格骨牌（I/O/T/S/Z/L/J 经典七色，布局经脚本验证）
+     循环：逐块落下 → 3 块冲突闪红 → 逐块锁定消解 → 全满足闪烁 */
 
-  var SV_CONFLICTS = [3, 10, 19, 26, 33, 41, 46];
-  var SV_PALETTE = ['req', 'elec', 'act'];
+  var SV_PIECES = [
+    { c: 'l', cells: [0, 8, 16, 17] },
+    { c: 'j', cells: [1, 2, 3, 11] },
+    { c: 'i', cells: [4, 12, 20, 28] },
+    { c: 'o', cells: [5, 6, 13, 14] },
+    { c: 'i', cells: [7, 15, 23, 31] },
+    { c: 'z', cells: [9, 10, 18, 19] },
+    { c: 'j', cells: [21, 22, 29, 37] },
+    { c: 't', cells: [24, 32, 33, 40] },
+    { c: 't', cells: [25, 26, 27, 34] },
+    { c: 's', cells: [30, 38, 39, 47] },
+    { c: 'l', cells: [35, 41, 42, 43] },
+    { c: 'j', cells: [36, 44, 45, 46] }
+  ];
+  var SV_CONFLICTS = [3, 8, 11];   // O 黄（右上）/ T 紫（左中）/ J 蓝（底部）
+
+  var SV_TEXT = {
+    zh: {
+      conf: '✗ 冲突', ok: '✓ 满足',
+      placing: '课程块落位中…',
+      found: function (n) { return '检测到 ' + n + ' 处冲突 · 求解中…'; },
+      left: function (n) { return '求解中… 剩余 ' + n + ' 处冲突'; },
+      done: '✓ 全部约束满足 · 3.2s'
+    },
+    en: {
+      conf: '✗ conflict', ok: '✓ satisfied',
+      placing: 'Placing course blocks…',
+      found: function (n) { return n + ' conflicts detected · solving…'; },
+      left: function (n) { return 'Solving… ' + n + ' to go'; },
+      done: '✓ All constraints satisfied · 3.2s'
+    }
+  };
 
   function buildSchedule(el) {
+    var T = EN ? SV_TEXT.en : SV_TEXT.zh;
+    var owner = new Array(48);   // 格 → 骨牌序号
+    SV_PIECES.forEach(function (p, pi) {
+      p.cells.forEach(function (idx) { owner[idx] = pi; });
+    });
+
     var html = '<div class="solv"><div class="solv-grid">';
     for (var i = 0; i < 48; i++) {
-      var cls = SV_PALETTE[(i * 5 + Math.floor(i / 8)) % 3];
-      var conf = SV_CONFLICTS.indexOf(i) >= 0;
-      html += '<i class="sv-cell sv-' + cls + (conf ? ' is-conf' : '') +
-        '" data-conf="' + (conf ? '1' : '') + '">' + (conf ? '✗' : '') + '</i>';
+      html += '<i class="sv-cell sv-' + SV_PIECES[owner[i]].c + '"></i>';
     }
     html += '</div>' +
       '<div class="solv-foot">' +
         '<div class="solv-legend">' +
-          '<span><i class="dot sv-req"></i>必修</span>' +
-          '<span><i class="dot sv-elec"></i>选修</span>' +
-          '<span><i class="dot sv-act"></i>活动</span>' +
-          '<span class="lg-conf">✗ 冲突</span>' +
-          '<span class="lg-ok">✓ 满足</span>' +
+          '<span class="lg-conf">' + T.conf + '</span>' +
+          '<span class="lg-ok">' + T.ok + '</span>' +
         '</div>' +
-        '<div class="solv-st">求解中…</div>' +
+        '<div class="solv-st"></div>' +
       '</div></div>';
     el.innerHTML = html;
 
     var root = el.firstChild;
     var grid = root.querySelector('.solv-grid');
     var st = root.querySelector('.solv-st');
-    var cells = SV_CONFLICTS.map(function (idx) {
-      return grid.children[idx];
+    var cells = grid.children;
+    var confPieces = SV_CONFLICTS.map(function (pi) {
+      return SV_PIECES[pi].cells.map(function (idx) { return cells[idx]; });
     });
-    var N = SV_CONFLICTS.length;
+    var N = confPieces.length;
+
+    function setConf(list, on) {
+      list.forEach(function (c) {
+        c.classList.toggle('is-conf', on);
+        c.textContent = on ? '✗' : '';
+      });
+    }
 
     function finalFrame() {
-      cells.forEach(function (c) {
-        c.classList.remove('is-conf');
-        c.classList.add('resolved');
-        c.textContent = '';
-      });
+      for (var i = 0; i < cells.length; i++) cells[i].classList.add('on');
       grid.classList.add('is-done');
-      st.textContent = '✓ 全部约束满足 · 3.2s';
+      st.textContent = T.done;
     }
 
     if (REDUCED) { finalFrame(); return; }
@@ -311,24 +414,33 @@
     (async function loop() {
       var g = ++gen;
       while (g === gen) {
+        // 复位：全部收起，逐块落下
         grid.classList.remove('is-done');
-        cells.forEach(function (c) {
-          c.classList.remove('resolved');
-          c.classList.add('is-conf');
-          c.textContent = '✗';
+        confPieces.forEach(function (list) {
+          setConf(list, false);
+          list.forEach(function (c) { c.classList.remove('resolved'); });
         });
-        st.textContent = '检测到 ' + N + ' 处冲突 · 求解中…';
-        await wait(1100); if (g !== gen) return;
+        for (var i = 0; i < cells.length; i++) cells[i].classList.remove('on');
+        st.textContent = T.placing;
+        await wait(500); if (g !== gen) return;
+
+        for (var pi = 0; pi < SV_PIECES.length; pi++) {
+          SV_PIECES[pi].cells.forEach(function (idx) { cells[idx].classList.add('on'); });
+          await wait(95); if (g !== gen) return;
+        }
+        await wait(300); if (g !== gen) return;
+
+        // 冲突浮现 → 逐块锁定消解
+        confPieces.forEach(function (list) { setConf(list, true); });
+        st.textContent = T.found(N);
+        await wait(1200); if (g !== gen) return;
 
         for (var k = 0; k < N; k++) {
-          cells[k].classList.remove('is-conf');
-          cells[k].classList.add('resolved');
-          cells[k].textContent = '';
+          setConf(confPieces[k], false);
+          confPieces[k].forEach(function (c) { c.classList.add('resolved'); });
           var left = N - k - 1;
-          st.textContent = left > 0
-            ? '求解中… 剩余 ' + left + ' 处冲突'
-            : '✓ 全部约束满足 · 3.2s';
-          await wait(560); if (g !== gen) return;
+          st.textContent = left > 0 ? T.left(left) : T.done;
+          await wait(640); if (g !== gen) return;
         }
 
         grid.classList.add('is-done');

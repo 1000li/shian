@@ -11,13 +11,22 @@
   var root = document.getElementById('mkm-demo');
   if (!root) return;
 
+  /* 英文站（<html lang="en">）切换界面文案；故事/题目是双语教学内容，保持原样 */
+  var EN = document.documentElement.lang === 'en';
+
+  var REDUCED = window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   var flow = document.getElementById('mkm-flow');
   var prevBtn = document.getElementById('mkm-prev');
   var nextBtn = document.getElementById('mkm-next');
   var done = document.getElementById('mkm-done');
   var progress = document.getElementById('mkm-progress');
   var dotsBox = document.getElementById('mkm-dots');
-  var stageImgs = document.querySelectorAll('.mkm-stage img');
+  var stageImgs = document.querySelectorAll('.mkm-stage img, .mkm-stage video');
+  // 岩浆短视频：减少动效偏好时停在 poster 帧
+  var stageVideo = document.querySelector('.mkm-stage video');
+  if (stageVideo && REDUCED) stageVideo.pause();
 
   /* ---------- 内容（逐字取自 mock 文本） ---------- */
 
@@ -48,7 +57,7 @@
       zh: '放进冰箱，冷藏两小时定型。' },
     { en: 'She filmed the whole process for her next Xiaohongshu post.',
       zh: '她录下全过程，准备发小红书。' },
-    { en: 'Caption: “AI said ‘edible volcano.’ I said ‘I got this.’”',
+    { en: 'Her caption: “AI said ‘edible volcano.’ I said ‘I got this.’”',
       zh: '配文：“AI说‘可食用火山’，我说‘这题我会’。”' },
     { en: 'Her little sister peeked in: “Can I help eat it?”',
       zh: '妹妹探头：“我能帮忙吃掉它吗？”' },
@@ -59,7 +68,7 @@
   // key = 在该句之后插入的题目
   var QUIZZES = {
     4: {
-      tag: '练习 1 · 中文选英文',
+      tag: EN ? 'Quiz 1 · Zh → En' : '练习 1 · 中文选英文',
       q: '“这也太像（岩浆）了！”最自然的英文是？',
       opts: ['This is too expensive',
              'This looks so fake',
@@ -68,7 +77,7 @@
       answer: 2
     },
     7: {
-      tag: '练习 2 · 英文选中文',
+      tag: EN ? 'Quiz 2 · En → Zh' : '练习 2 · 英文选中文',
       q: 'What does “legit” mean in this story?',
       opts: ['合法的',
              '很贵的',
@@ -77,7 +86,7 @@
       answer: 2
     },
     16: {
-      tag: '练习 3 · 阅读理解',
+      tag: EN ? 'Quiz 3 · Reading' : '练习 3 · 阅读理解',
       q: 'Why does Aya say “don’t tell Mom”?',
       opts: ['Because the honey was expired',
              'Because she used expensive or special honey without asking',
@@ -140,7 +149,9 @@
     if (n > maxSent) maxSent = n;
     setStage(stageFor(n));
     dots.forEach(function (d, i) { d.classList.toggle('on', i < maxSent); });
-    progress.textContent = '第 ' + n + '/16 句 · 练习 ' + solved + '/' + TOTAL_Q;
+    progress.textContent = EN
+      ? 'Line ' + n + '/16 · Quiz ' + solved + '/' + TOTAL_Q
+      : '第 ' + n + '/16 句 · 练习 ' + solved + '/' + TOTAL_Q;
     prevBtn.disabled = animating || pos === 0;
     var st = STEPS[pos];
     var quizBlocked = st.type === 'quiz' &&

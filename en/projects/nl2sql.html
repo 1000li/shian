@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NL2SQL Reporting Agent — Shian Liu</title>
+  <meta name="description" content="NL2SQL Reporting Agent: natural language replaces complex click paths — just say “average math score last term” and get a chart in seconds. Internal project at an education company, anonymized.">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap">
+      <a class="nav-logo" href="../index.html">Shian Liu</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../about.html">About</a>
+        <a href="../projects.html" class="active">Projects</a>
+        <a href="../contact.html">Contact</a>
+        <a class="lang-switch" href="../../projects/nl2sql.html" lang="zh-CN" hreflang="zh-CN">中文</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section wrap">
+    <div class="detail-col">
+      <div class="detail-head">
+        <a class="back-link" href="../projects.html">← Back to all projects</a>
+        <h1 class="detail-title">NL2SQL Reporting Agent</h1>
+        <p class="detail-sub">AI product · Internal project at an education company, anonymized</p>
+      </div>
+
+      <div class="detail-hero">
+        <div class="viz" data-viz="nl2sql"></div>
+      </div>
+
+      <div class="detail-cols">
+        <div>
+          <span class="card-type">Product</span>
+          <p class="desc">The original reporting interface of the school-affairs SaaS was so complex that staff needed a long time to learn the click paths. The reporting agent I designed replaces that with natural language — just say “average math score last term” and get a chart in seconds. This is not another SQL tool; it's a new interaction paradigm, from “learning the interface” to “just talking.”</p>
+        </div>
+        <div>
+          <span class="card-type">Engineering</span>
+          <p class="desc">FastAPI backend + DeepSeek-V3 for intent recognition + a rule engine for Cube routing, avoiding the safety risks of letting an LLM write raw SQL. Four iterations: v1 keyword matching → v2 predefined views → v3 schema RAG → v4 Cube queries with row-level security injection.</p>
+          <div class="tag-row">
+            <span class="tag">FastAPI</span>
+            <span class="tag">DeepSeek-V3</span>
+            <span class="tag">Rule engine</span>
+            <span class="tag">Schema RAG</span>
+            <span class="tag">Cube</span>
+            <span class="tag">RLS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-links">
+        <p class="card-note">Internal project at an education company, anonymized · No public demo</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-contact">
+        <a href="mailto:yuqi_liu1993@hotmail.com">yuqi_liu1993@hotmail.com</a>
+        <a href="https://github.com/1000li" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="foot-copy">© 2026 Shian Liu</p>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+</body>
+</html>

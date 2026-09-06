@@ -17,11 +17,23 @@
   var REDUCED = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- 内容（叙事池 8 段轮询，命令行事件随机） ---------- */
+  /* ---------- 内容（叙事池 8 段轮询，命令行事件随机；英文站走 EN 表） ---------- */
 
-  var NAMES = ['铁螯', '红眼', '裂甲', '软壳', '小草', '青苔'];
+  var EN = document.documentElement.lang === 'en';
 
-  var EVENTS = [
+  var NAMES = EN
+    ? ['Ironclaw', 'Redeye', 'Crackshell', 'Softshell', 'Sprout', 'Moss']
+    : ['铁螯', '红眼', '裂甲', '软壳', '小草', '青苔'];
+
+  var NARR_TAG = EN ? '[NARRATIVE]' : '【叙事】';
+
+  var EVENTS = EN ? [
+    '> Redeye grabbed Ironclaw, dealing 10 damage',
+    '> Ironclaw grabbed Redeye, dealing 10 damage',
+    '> Crackshell grabbed Ironclaw, dealing 10 damage',
+    '> Softshell shared resources with Sprout (common pool)',
+    '> Sprout shared resources with Softshell (common pool)'
+  ] : [
     '> 红眼抢夺了铁螯，造成10伤害',
     '> 铁螯抢夺了红眼，造成10伤害',
     '> 裂甲抢夺了铁螯，造成10伤害',
@@ -29,7 +41,44 @@
     '> 小草分享了资源给软壳(公共池)'
   ];
 
-  var NARRATIVES = [
+  var NARRATIVES = EN ? [
+    [NARR_TAG,
+     'Sprout gave half of the food it found to Softshell.',
+     'Not generosity — arithmetic. In the tank\u2019s math, two living allies beat one well-fed loner.',
+     'But calculation, too, can be a kind of tenderness.'],
+    [NARR_TAG,
+     'Ironclaw\u2019s claws are redder than yesterday.',
+     'It doesn\u2019t remember how many times it has grabbed — only that afterwards, the others look at it with something new in their eyes.',
+     'Not fear. Something more complex — like recognition, like confirmation.'],
+    [NARR_TAG,
+     'Crackshell and Redeye stay close; they read each other without words.',
+     'When Ironclaw strikes, they only watch, waiting for their own moment.',
+     'Softshell huddles in the corner, poorer but alive.',
+     'In this tank, staying alive is itself a kind of victory.'],
+    [NARR_TAG,
+     'The tank has no end, but its resources do.',
+     'Every lobster believes it is choosing; in truth it is running an older program —',
+     'one written into their shells, into the current of the water, into the first beat of every cycle.'],
+    [NARR_TAG,
+     'A new larval lobster drifts in the tank, nameless.',
+     'It knows no rules and swims straight for the densest food — usually Ironclaw\u2019s territory.',
+     'Unexpectedly, Ironclaw does not move. Maybe it is too small to be a threat;',
+     'or maybe every cycle reminds them all: new life is something beyond resources.'],
+    [NARR_TAG,
+     'The one patch where the weed no longer sways is where Moss last stayed.',
+     'No ritual, no farewell. Its resources flow back into the common pool, as if it never existed.',
+     'But Softshell swims past that corner half a beat slower.',
+     'The tank remembers more than the lobsters think.'],
+    [NARR_TAG,
+     'This cycle, the water level fell by forty percent. All calculus failed at once: sharing became luxury, grabbing became pointless.',
+     'The line between hawks and doves blurred in the face of hunger —',
+     'the survivors were not the strongest, nor the most generous, but the first to stop wasting themselves on each other.'],
+    [NARR_TAG,
+     'At cycle five hundred, the tank reached a kind of balance.',
+     'Nobody won. The doves hold the majority; the hawks never vanished — shadows at the edge of the flame.',
+     'The observer closes the notebook and writes the conclusion:',
+     'a steady state is not the end of conflict, but conflict finding its own rhythm.']
+  ] : [
     // 段1（合作）
     ['【叙事】',
      '小草把找到的食物分了一半给软壳。',
@@ -75,6 +124,76 @@
      '观察者合上记录本，写下结论：',
      '所谓稳态，不是冲突的终结，而是冲突找到了自己的节奏。']
   ];
+
+  var TEXT = EN ? {
+    boot1: [
+      '[Tank Observation Log · Day 1]',
+      '',
+      'You are the observer of a glass tank.',
+      'Six lobsters live inside: Ironclaw, Redeye, Crackshell, Softshell, Sprout, Moss.',
+      'Resources are limited. They grab, and they share. Each cycle they choose for themselves —',
+      'but you hold what they lack: the power to add resources, and the power to decide who leaves the tank.',
+      'You play no single lobster. You stand outside the glass.',
+      'Every decision you make becomes the history of this tiny society.',
+      ''
+    ],
+    boot2: [
+      '> Lobster Simulator v0.1',
+      '> Initializing population... done',
+      '> Current cycle: 1',
+      '> Action points left: 2',
+      '> Press [1-4] to choose an action',
+      ''
+    ],
+    menu: [
+      '[1] Cull — remove one lobster from the tank',
+      '[2] Feed — common pool +15 resources',
+      '[3] Isolate — one lobster cannot act this cycle',
+      '[4] Skip — just watch this cycle',
+      ''
+    ],
+    chosen: '> Chosen action: ',
+    act1: function (n) { return '> Culled ' + n + '. Population -1'; },
+    act2: '> Feeding done. Common pool +15 resources',
+    act3: function (n) { return '> Isolated ' + n + '. It circles its own corner'; },
+    act4: '> Cycle skipped. The tank runs on',
+    generating: '> Generating narrative...',
+    cycleEnd: function (c) { return '— Cycle ' + c + ' complete · press Enter or click a button —'; }
+  } : {
+    boot1: [
+      '【水箱观察记录 · 第 1 天】',
+      '',
+      '你是一只玻璃水箱的观察者。',
+      '箱里住着六只龙虾：铁螯、红眼、裂甲、软壳、小草、青苔。',
+      '资源有限，它们争夺，也分享。每个周期，它们自己做选择——',
+      '但你握着它们没有的东西：补充资源的权力，和决定谁离开水箱的权力。',
+      '你不扮演任何一只龙虾。你站在水箱外面。',
+      '你的每个决定，都会成为这个小社会的历史。',
+      ''
+    ],
+    boot2: [
+      '> Lobster Simulator v0.1',
+      '> 初始化种群... 完成',
+      '> 当前周期: 1',
+      '> 剩余行动点: 2',
+      '> 输入 [1-4] 选择行动',
+      ''
+    ],
+    menu: [
+      '[1] 处决 —— 将一只龙虾移出水箱',
+      '[2] 投喂 —— 公共池资源 +15',
+      '[3] 隔离 —— 一只龙虾本回合无法行动',
+      '[4] 跳过 —— 旁观这个周期',
+      ''
+    ],
+    chosen: '> 选择行动: ',
+    act1: function (n) { return '> 处决了 ' + n + '。种群规模 -1'; },
+    act2: '> 投喂完成。公共池资源 +15',
+    act3: function (n) { return '> 隔离了 ' + n + '。它在自己的角落里转圈'; },
+    act4: '> 跳过本回合。水箱继续运转',
+    generating: '> 正在生成叙事...',
+    cycleEnd: function (c) { return '— 周期 ' + c + ' 结束 · 按 Enter 或点击按钮继续 —'; }
+  };
 
   /* ---------- 状态 ---------- */
 
@@ -131,7 +250,7 @@
       div.insertBefore(document.createTextNode(text[i]), cursor);
       scroll();
       var d = speed;
-      if ('，。——；：、！？…'.indexOf(text[i]) >= 0) d = speed * 3.2;
+      if ('，。——；：、！？…,.;:!?—'.indexOf(text[i]) >= 0) d = speed * 3.2;
       await wait(d);
     }
   }
@@ -140,10 +259,10 @@
   async function typeSeg(lines, cls, speed) {
     skip = false;
     for (var i = 0; i < lines.length; i++) {
-      var lineCls = lines[i] === '【叙事】' ? 'ld-green' : cls;
+      var lineCls = lines[i] === NARR_TAG ? 'ld-green' : cls;
       if (skip) {
         for (var j = i; j < lines.length; j++) {
-          printLine(lines[j], lines[j] === '【叙事】' ? 'ld-green' : cls);
+          printLine(lines[j], lines[j] === NARR_TAG ? 'ld-green' : cls);
         }
         break;
       }
@@ -159,34 +278,11 @@
     setBtns(false);
 
     // 背景引入（打字机，点击终端或按 Enter 可跳过）
-    await typeSeg([
-      '【水箱观察记录 · 第 1 天】',
-      '',
-      '你是一只玻璃水箱的观察者。',
-      '箱里住着六只龙虾：铁螯、红眼、裂甲、软壳、小草、青苔。',
-      '资源有限，它们争夺，也分享。每个周期，它们自己做选择——',
-      '但你握着它们没有的东西：补充资源的权力，和决定谁离开水箱的权力。',
-      '你不扮演任何一只龙虾。你站在水箱外面。',
-      '你的每个决定，都会成为这个小社会的历史。',
-      ''
-    ], 'ld-narr', 48);
+    await typeSeg(TEXT.boot1, 'ld-narr', 48);
 
-    await typeSeg([
-      '> Lobster Simulator v0.1',
-      '> 初始化种群... 完成',
-      '> 当前周期: 1',
-      '> 剩余行动点: 2',
-      '> 输入 [1-4] 选择行动',
-      ''
-    ], '', 30);
+    await typeSeg(TEXT.boot2, '', 30);
 
-    await typeSeg([
-      '[1] 处决 —— 将一只龙虾移出水箱',
-      '[2] 投喂 —— 公共池资源 +15',
-      '[3] 隔离 —— 一只龙虾本回合无法行动',
-      '[4] 跳过 —— 旁观这个周期',
-      ''
-    ], 'ld-dim', 18);
+    await typeSeg(TEXT.menu, 'ld-dim', 18);
 
     busy = false;
     setBtns(true);
@@ -197,11 +293,11 @@
     busy = true;
     setBtns(false);
 
-    var lines = ['> 选择行动: ' + n];
-    if (n === 1) lines.push('> 处决了 ' + pick(NAMES) + '。种群规模 -1');
-    if (n === 2) lines.push('> 投喂完成。公共池资源 +15');
-    if (n === 3) lines.push('> 隔离了 ' + pick(NAMES) + '。它在自己的角落里转圈');
-    if (n === 4) lines.push('> 跳过本回合。水箱继续运转');
+    var lines = [TEXT.chosen + n];
+    if (n === 1) lines.push(TEXT.act1(pick(NAMES)));
+    if (n === 2) lines.push(TEXT.act2);
+    if (n === 3) lines.push(TEXT.act3(pick(NAMES)));
+    if (n === 4) lines.push(TEXT.act4);
     await typeSeg(lines, '', 26);
 
     // 随机 1-2 条群体事件
@@ -212,14 +308,14 @@
     }
     await typeSeg(ev, 'ld-ev', 26);
 
-    await typeSeg(['> 正在生成叙事...', ''], 'ld-dim', 26);
+    await typeSeg([TEXT.generating, ''], 'ld-dim', 26);
     if (!REDUCED) await wait(600);
 
     var narr = NARRATIVES[narrIdx % NARRATIVES.length];
     narrIdx++;
     await typeSeg(narr, 'ld-narr', 80);
 
-    await typeSeg(['', '— 周期 ' + (cycle++) + ' 结束 · 按 Enter 或点击按钮继续 —'], 'ld-dim', 26);
+    await typeSeg(['', TEXT.cycleEnd(cycle++)], 'ld-dim', 26);
 
     busy = false;
     setBtns(true);
