@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Knowledge-Base QA — Shian Liu</title>
+  <meta name="description" content="RAG Knowledge-Base QA: turning a 15-lesson AI curriculum into a traceable question-answering knowledge base, with dual-channel retrieval and a two-signal AND-gate abstention rule. Open source, with a live demo.">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Google Fonts 改为非阻塞加载：media="print" 使其不阻塞首屏渲染，
+       字体到达后由 onload 切回 all；失败也不影响页面（CSS 已配系统字体栈）。 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+  <header class="site-nav">
+    <div class="wrap">
+      <a class="nav-logo" href="../index.html">Shian Liu</a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="../about.html">About</a>
+        <a href="../projects.html" class="active">Projects</a>
+        <a href="../contact.html">Contact</a>
+        <a class="lang-switch" href="../../projects/rag.html" lang="zh-CN" hreflang="zh-CN">中文</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="section wrap">
+    <div class="detail-col">
+      <div class="detail-head">
+        <a class="back-link" href="../projects.html">← Back to all projects</a>
+        <h1 class="detail-title">RAG Knowledge-Base QA</h1>
+        <p class="detail-sub">AI product · open source · end-to-end runnable</p>
+      </div>
+
+      <div class="detail-hero">
+        <div class="viz" data-viz="rag"></div>
+      </div>
+
+      <div class="detail-cols">
+        <div>
+          <span class="card-type">Product</span>
+          <p class="desc">Faced with a 15-lesson AI curriculum for schools, students and teachers kept asking the same thing: “which page is the answer on?” I turned the whole curriculum into a question-answering knowledge base: ask “what is an LLM hallucination” and get an answer with page-level citations in seconds. Ask something beyond the material, and it says “outside the course material” instead of inventing an answer. <strong>It answers — and it holds its ground.</strong></p>
+        </div>
+        <div>
+          <span class="card-type">Engineering</span>
+          <p class="desc">640 curriculum chunks, dual-channel retrieval (<code>bge-small-zh</code> vectors + BM25 keywords), and a <strong>two-signal AND-gate abstention rule</strong> — when both signals fall below threshold it abstains outright and never calls the LLM. A self-built 31-question evaluation set reached recall@5 of 100% and 100% out-of-scope abstention (4.5% false-abstention rate). During development a self-audit caught a <strong>silent failure</strong> — the tokenizer mapped all-caps abbreviations to UNK, distorting the semantics — and I fixed it with a <strong>two-way regression</strong> covering both the indexing and the query side.</p>
+          <div class="tag-row">
+            <span class="tag">bge-small-zh</span>
+            <span class="tag">sqlite-vec</span>
+            <span class="tag">BM25</span>
+            <span class="tag">two-signal abstention</span>
+            <span class="tag">RAG</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-links">
+        <div class="card-links">
+          <a href="https://github.com/1000li/course-kb-rag" target="_blank" rel="noopener">GitHub →</a>
+          <a href="https://course-kb-rag.onrender.com/" target="_blank" rel="noopener">Live demo →</a>
+        </div>
+        <p class="card-note">The demo site is password-protected — get in touch for access</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-foot">
+    <div class="wrap">
+      <div class="foot-contact">
+        <a href="mailto:yuqi_liu1993@hotmail.com">yuqi_liu1993@hotmail.com</a>
+        <a href="https://github.com/1000li" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="foot-copy">© 2026 Shian Liu</p>
+    </div>
+  </footer>
+
+  <script src="../../js/main.js"></script>
+</body>
+</html>

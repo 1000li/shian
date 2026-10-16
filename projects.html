@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>项目 — 刘雨琦 / Shian</title>
-  <meta name="description" content="刘雨琦（Shian）的项目集：NL2SQL智能报表Agent、教育运筹优化工具集、绡山寻踪、龙虾模拟器、AI科普课程、名可名。">
+  <meta name="description" content="刘雨琦（Shian）的项目集：NL2SQL智能报表Agent、RAG知识库问答、教育运筹优化工具集、AI科普课程、名可名、古建研学、绡山寻踪、龙虾模拟器。">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Google Fonts 改为非阻塞加载：media="print" 使其不阻塞首屏渲染，
+       字体到达后由 onload 切回 all；失败也不影响页面（CSS 已配系统字体栈）。 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -27,71 +30,133 @@
 
   <main class="section wrap">
     <h1 class="section-title">项目</h1>
-    <p class="section-desc">六个做得最用心的东西。点进卡片看完整的产品版与技术版。</p>
+    <p class="section-desc">八个做得最用心的东西。点进卡片看完整的产品版与技术版。</p>
 
-    <div class="card-grid">
+    <section class="group">
+      <div class="group-head">
+        <span class="group-no">01</span>
+        <h2>AI 产品</h2>
+        <p class="group-sub">把 AI 能力做成能用的东西。</p>
+      </div>
+      <div class="card-grid">
 
-      <a class="feature-card list-card" href="projects/nl2sql.html">
-        <div class="card-visual"><div class="viz" data-viz="nl2sql"></div></div>
-        <div class="card-body">
-          <span class="card-type">AI 产品</span>
-          <h3>NL2SQL 智能报表Agent</h3>
-          <p>直接说“上学期数学平均分”，秒级出图——从GUI到LUI的新一代交互范式。</p>
-        </div>
-      </a>
+        <a class="feature-card list-card" href="projects/nl2sql.html">
+          <div class="card-visual"><div class="viz" data-viz="nl2sql"></div></div>
+          <div class="card-body">
+            <span class="card-type">AI 产品</span>
+            <h3>NL2SQL 智能报表Agent</h3>
+            <p>直接说“上学期数学平均分”，秒级出图——从GUI到LUI的新一代交互范式。</p>
+          </div>
+        </a>
 
-      <a class="feature-card list-card" href="projects/schedule.html">
-        <div class="card-visual"><div class="viz" data-viz="schedule"></div></div>
-        <div class="card-body">
-          <span class="card-type">B 端平台</span>
-          <h3>教育运筹优化工具集</h3>
-          <p>数学建模自动求解排课与分班，分钟级替代数周手工排调。</p>
-        </div>
-      </a>
+        <a class="feature-card list-card" href="projects/rag.html">
+          <div class="card-visual"><div class="viz" data-viz="rag"></div></div>
+          <div class="card-body">
+            <span class="card-type">AI 产品</span>
+            <h3>RAG 知识库问答</h3>
+            <p>问“什么是大模型的幻觉”，几秒得到带页码出处的回答；超出讲义范围，它会明说，而不是编。</p>
+          </div>
+        </a>
 
-      <a class="feature-card list-card" href="projects/xiaoshan.html">
-        <div class="card-visual">
-          <img src="images/xiaoshanxunzong.webp" alt="绡山寻踪主视觉：青绿山水与游戏标题" loading="lazy">
-        </div>
-        <div class="card-body">
-          <span class="card-type">游戏设计</span>
-          <h3>绡山寻踪</h3>
-          <p>沉浸式解谜游戏：通过文本细读，发现“被讲述”与“真实”之间的裂隙。</p>
-        </div>
-      </a>
+        <a class="feature-card list-card" href="projects/schedule.html">
+          <div class="card-visual"><div class="viz" data-viz="schedule"></div></div>
+          <div class="card-body">
+            <span class="card-type">B 端平台</span>
+            <h3>教育运筹优化工具集</h3>
+            <p>数学建模自动求解排课与分班，分钟级替代数周手工排调。</p>
+          </div>
+        </a>
 
-      <a class="feature-card list-card" href="projects/lobster.html">
-        <div class="card-visual"><div class="viz" data-viz="lobster-mini"></div></div>
-        <div class="card-body">
-          <span class="card-type">开源 / 学术</span>
-          <h3>龙虾模拟器</h3>
-          <p>ABM 仿真封闭种群的生存策略演化——合作还是竞争，答案反直觉。</p>
-        </div>
-      </a>
+      </div>
+    </section>
 
-      <a class="feature-card list-card" href="projects/ai-course.html">
-        <div class="card-visual">
-          <img src="images/ai-course.webp" alt="AI科普课程主视觉：古典手与像素光标相触" loading="lazy">
-        </div>
-        <div class="card-body">
-          <span class="card-type">内容 / 教育</span>
-          <h3>AI科普课程</h3>
-          <p>3万字讲义+研学手册，帮非技术背景的人建立 AI 思维框架。</p>
-        </div>
-      </a>
+    <section class="group">
+      <div class="group-head">
+        <span class="group-no">02</span>
+        <h2>内容与教育</h2>
+        <p class="group-sub">把抽象讲清楚，把文化讲活。</p>
+      </div>
+      <div class="card-grid">
 
-      <a class="feature-card list-card" href="projects/mingkeming.html">
-        <div class="card-visual">
-          <img src="images/mingkeming.webp" alt="名可名主视觉：外语学习应用海报" loading="lazy">
-        </div>
-        <div class="card-body">
-          <span class="card-type">实验性 · 黑客松</span>
-          <h3>名可名</h3>
-          <p>48小时黑客松作品，把短视频变成个性化外语教材。</p>
-        </div>
-      </a>
+        <a class="feature-card list-card" href="projects/ai-course.html">
+          <div class="card-visual">
+            <img src="images/ai-course.webp" alt="AI科普课程主视觉：古典手与像素光标相触" loading="lazy">
+          </div>
+          <div class="card-body">
+            <span class="card-type">内容 / 教育</span>
+            <h3>AI科普课程</h3>
+            <p>3万字讲义+研学手册，帮非技术背景的人建立 AI 思维框架。</p>
+          </div>
+        </a>
 
-    </div>
+        <a class="feature-card list-card" href="projects/mingkeming.html">
+          <div class="card-visual">
+            <img src="images/mingkeming.webp" alt="名可名主视觉：外语学习应用海报" loading="lazy">
+          </div>
+          <div class="card-body">
+            <span class="card-type">实验性 · 黑客松</span>
+            <h3>名可名</h3>
+            <p>48小时黑客松作品，把短视频变成个性化外语教材。</p>
+          </div>
+        </a>
+
+        <a class="feature-card list-card" href="projects/yanxue.html">
+          <div class="card-visual"><div class="viz" data-viz="bookmark-marquee"></div></div>
+          <div class="card-body">
+            <span class="card-type">内容 / 教育</span>
+            <h3>古建研学</h3>
+            <p>两套青少年古建筑研学手册，加一套北京中轴线书签——用手绘插画把“看不懂的复杂”变成能读下去的东西。</p>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-head">
+        <span class="group-no">03</span>
+        <h2>游戏与实验</h2>
+        <p class="group-sub">在好玩的地方试方法。</p>
+      </div>
+      <div class="card-grid">
+
+        <a class="feature-card list-card" href="projects/xiaoshan.html">
+          <div class="card-visual">
+            <img src="images/xiaoshanxunzong.webp" alt="绡山寻踪主视觉：青绿山水与游戏标题" loading="lazy">
+          </div>
+          <div class="card-body">
+            <span class="card-type">游戏设计</span>
+            <h3>绡山寻踪</h3>
+            <p>沉浸式解谜游戏：通过文本细读，发现“被讲述”与“真实”之间的裂隙。</p>
+          </div>
+        </a>
+
+        <a class="feature-card list-card" href="projects/lobster.html">
+          <div class="card-visual"><div class="viz" data-viz="lobster-mini"></div></div>
+          <div class="card-body">
+            <span class="card-type">开源 / 学术</span>
+            <h3>龙虾模拟器</h3>
+            <p>ABM 仿真封闭种群的生存策略演化——合作还是竞争，答案反直觉。</p>
+          </div>
+        </a>
+
+      <div class="feature-card list-card card-teaser" aria-disabled="true">
+          <div class="card-visual">
+            <div class="teaser-viz">
+              <span class="teaser-dots"><i></i><i></i><i></i></span>
+              <span class="teaser-txt">未完待续</span>
+              <span class="teaser-sub">In progress</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <span class="card-type">正在做</span>
+            <h3>下一个项目</h3>
+            <p>正在打磨中——一个还没想好名字的东西。先留个位置。</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
   </main>
 
   <footer class="site-foot">

@@ -1,12 +1,18 @@
 # 本地素材与内部文档（不进入公开仓库）
 assets/
 PRD.md
+PRD-*.md
 lobster-demo-design.md
 
 # 验证截图
 .shots/
 
+# 调试产物：探针页与临时预览图（下划线开头），避免误入公开仓库
+_probe.html
+_*.png
+
 # 系统与临时文件
 Thumbs.db
 .DS_Store
 .venv*/
+__pycache__/

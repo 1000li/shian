@@ -473,12 +473,330 @@
       '</div>';
   }
 
+  /* ---------- RAG 智能问答卡片动画 ----------
+     视觉语言取自 RAG 项目自身前端（course-kb-rag/web/index.html）：
+     白底点阵 · 克莱因蓝 #002FA7 · 柠檬黄 #FFDD00 · 安全橙 #FF4D00（仅拒答）
+     无圆角 / 无阴影 / 无渐变；3px 硬边框。
+     分镜：问题打字 → 双信号（向量 / BM25）爬升 → 命中出答案+出处
+            → 下一轮切换为拒答态（两路信号都低于阈值）→ 回来
+     每轮约 8s，循环播放；尊重 prefers-reduced-motion。 */
+
+  var RAG_HIT = {
+    q: ['什么是大模型的', '幻觉？'],
+    vec: 0.19,
+    bm25: 12.4,
+    ans: [
+      '模型会生成读起来流畅、但事实上错误或没有依据的内容，',
+      '并且它自己无法分辨——这叫', { hl: '幻觉（hallucination）' }, '。'
+    ],
+    cites: ['第 7 课 · 幻觉 · P23', '第 7 课 · 可靠性 · P25'],
+    state: '双信号与门通过 · 已调用 LLM'
+  };
+
+  var RAG_MISS = {
+    q: ['这门课对高中生', '有用吗？'],
+    vec: 0.041,
+    bm25: 2.8,
+    cites: [],
+    state: '双信号均低于阈值'
+  };
+
+  var RAG_TEXT = {
+    zh: {
+      no: '03 / 知识库问答',
+      live: 'LIVE',
+      sigVec: '向量 · bge-small-zh',
+      sigBm25: 'BM25',
+      abstainTitle: '超出讲义范围',
+      abstainSub: '双信号拒答判定低于阈值，未调用 LLM —— 本结论仅由检索信号强度决定。',
+      searching: '检索中…'
+    },
+    en: {
+      no: '03 / knowledge base QA',
+      live: 'LIVE',
+      sigVec: 'vector · bge-small-zh',
+      sigBm25: 'BM25',
+      abstainTitle: 'OUTSIDE THE COURSE MATERIAL',
+      abstainSub: 'Both retrieval signals fell below threshold, so the LLM was never called — the verdict comes from signal strength alone.',
+      searching: 'Retrieving…'
+    }
+  };
+
+  function buildRag(el) {
+    var T = EN ? RAG_TEXT.en : RAG_TEXT.zh;
+
+    function ansHtml(parts) {
+      return parts.map(function (p) {
+        return typeof p === 'string' ? p : '<span class="hl">' + p.hl + '</span>';
+      }).join('');
+    }
+
+    el.innerHTML =
+      '<div class="rag">' +
+        '<div class="rag-head">' +
+          '<span class="rag-no"><span class="rag-dot">●</span> ' + T.no + '</span>' +
+          '<span class="rag-live">' + T.live + '</span>' +
+        '</div>' +
+        '<div class="rag-q"><span class="rag-qt"></span><i class="rag-caret"></i></div>' +
+        '<div class="rag-signals">' +
+          '<div class="rag-sig">' +
+            '<span class="rag-sig-label">' + T.sigVec + '</span>' +
+            '<span class="rag-bar"><i></i></span>' +
+            '<span class="rag-sig-val">—</span>' +
+          '</div>' +
+          '<div class="rag-sig">' +
+            '<span class="rag-sig-label">' + T.sigBm25 + '</span>' +
+            '<span class="rag-bar"><i></i></span>' +
+            '<span class="rag-sig-val">—</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="rag-state">' + T.searching + '</div>' +
+        '<div class="rag-ans">' +
+          '<div class="rag-ans-text"></div>' +
+          '<div class="rag-cites"><span class="cites-label">03 / ' + (EN ? 'sources' : '出处') + '</span></div>' +
+        '</div>' +
+        '<div class="rag-abstain">' +
+          '<div class="rag-abstain-title">' + T.abstainTitle + '</div>' +
+          '<div class="rag-abstain-sub">' + T.abstainSub + '</div>' +
+        '</div>' +
+      '</div>';
+
+    var root = el.firstChild;
+    var qt = root.querySelector('.rag-qt');
+    var caret = root.querySelector('.rag-caret');
+    var bars = root.querySelectorAll('.rag-bar i');
+    var vals = root.querySelectorAll('.rag-sig-val');
+    var state = root.querySelector('.rag-state');
+    var ansBox = root.querySelector('.rag-ans');
+    var ansText = root.querySelector('.rag-ans-text');
+    var citesBox = root.querySelector('.rag-cites');
+
+    function paint(smp, stText) {
+      qt.textContent = smp.q.join('');
+      vals[0].textContent = smp.vec.toFixed(3);
+      vals[1].textContent = smp.bm25.toFixed(1);
+      bars[0].style.width = '0';
+      bars[1].style.width = '0';
+      ansBox.classList.remove('on');
+      /* 仅拒答态使用安全橙橙幅 */
+      root.classList.toggle('is-abstain', !smp.ans);
+      state.textContent = stText || T.searching;
+      /* 出处标签（命中态两条） */
+      Array.prototype.forEach.call(citesBox.querySelectorAll('.rag-cite'), function (c) {
+        c.remove();
+      });
+      if (smp.cites && smp.cites.length) {
+        smp.cites.forEach(function (c) {
+          var s = document.createElement('span');
+          s.className = 'rag-cite';
+          s.textContent = c;
+          citesBox.appendChild(s);
+        });
+      }
+      ansText.innerHTML = smp.ans ? ansHtml(smp.ans) : '';
+    }
+
+    function finalFrame() {
+      paint(RAG_HIT, RAG_HIT.state);
+      bars[0].style.width = '62%';
+      bars[1].style.width = '78%';
+      ansBox.classList.add('on');
+    }
+
+    /* 静止态：命中答案（reduced-motion 兜底） */
+    if (REDUCED) { finalFrame(); return; }
+
+    var gen = 0;
+
+    async function type(elm, text, speed, g) {
+      for (var i = 0; i < text.length; i++) {
+        if (g !== gen) return false;
+        elm.textContent += text[i];
+        await wait(speed);
+      }
+      return true;
+    }
+
+    function grow(smp, on) {
+      bars[0].style.width = on ? '62%' : '13%';
+      bars[1].style.width = on ? '78%' : '19%';
+      vals[0].textContent = (on ? smp.vec : 0.041).toFixed(3);
+      vals[1].textContent = (on ? smp.bm25 : 2.8).toFixed(1);
+    }
+
+    (async function loop() {
+      var g = ++gen;
+      var turn = 0;                       // 每两轮插入一次拒答态
+      while (g === gen) {
+        var isMiss = (turn % 2 === 1);
+        var smp = isMiss ? RAG_MISS : RAG_HIT;
+        turn++;
+
+        paint(smp, T.searching);
+        await wait(420); if (g !== gen) return;
+
+        /* ① 问题打字进入（逐段） */
+        for (var seg = 0; seg < smp.q.length; seg++) {
+          if (!await type(qt, smp.q[seg], 62, g)) return;
+          await wait(120); if (g !== gen) return;
+        }
+        caret.style.visibility = 'hidden';
+        await wait(360); if (g !== gen) return;
+
+        /* ② 双信号爬升 */
+        grow(smp, !isMiss);
+        await wait(900); if (g !== gen) return;
+
+        /* ③ 判定：命中出答案+出处；低于阈值则橙色拒答横幅 */
+        state.textContent = smp.state;
+        if (isMiss) {
+          root.classList.add('is-abstain');
+          ansBox.classList.remove('on');
+        } else {
+          ansBox.classList.add('on');
+        }
+
+        /* ④ 停留，进入下一轮 */
+        await wait(isMiss ? 3000 : 3400); if (g !== gen) return;
+        caret.style.visibility = '';
+      }
+    })();
+  }
+
+  /* ---------- 中轴线书签：横向滚动（项目卡片自动轮播） ----------
+     竖版书签完整展示，不裁切；序列渲染两份实现无缝循环。 */
+
+  var BOOKMARKS = [
+    ['bookmark-zhonggulou.webp', '钟鼓楼', 'Zhonggulou (Bell and Drum Towers)'],
+    ['bookmark-tiantan.webp', '天坛', 'Temple of Heaven'],
+    ['bookmark-gugong.webp', '故宫', 'The Forbidden City'],
+    ['bookmark-jingshan.webp', '景山', 'Jingshan'],
+    ['bookmark-yongdingmen.webp', '永定门', 'Yongdingmen']
+  ];
+
+  /* 页面层级：根目录页用 "images/"，projects/ 下用 "../images/"
+     以本脚本的 src 推断，避免每页硬编码。 */
+  var IMG_BASE = (function () {
+    var s = document.querySelector('script[src*="main.js"]');
+    var src = s ? s.getAttribute('src') : 'js/main.js';
+    return src.replace(/js\/main\.js.*$/, '') + 'images/';
+  })();
+
+  /* 一份书签序列（5 张）。detail 页画廊用 lazy；轮播里必须全部立即解码，
+     否则轨道宽度会随加载跳动，位移距离算错、循环出现接缝。 */
+  function bookmarkImgs(lazy) {
+    return BOOKMARKS.map(function (b) {
+      var alt = EN ? 'Beijing Central Axis bookmark: ' + b[2]
+                   : '中轴线书签：' + b[1];
+      return '<img src="' + IMG_BASE + b[0] + '" alt="' + alt + '"' +
+        (lazy ? ' loading="lazy"' : ' loading="eager"') +
+        ' decoding="async" draggable="false">';
+    }).join('');
+  }
+
+  function buildBookmarkMarquee(el) {
+    /* 两份完全相同的 .bm-seq 并排。
+       关键：间距全部由 seq 内部承担（gap + padding-right），
+       轨道本身不 gap、不 padding —— 这样 translateX(-50%) 走过的距离
+       恰好等于一个 seq 的宽度，也就是内容周期，无缝。
+       若把 gap/padding 放在轨道上，轨道宽 = 2*内容 + 奇数个 gap，
+       -50% 与真实周期差半个 gap，每轮循环会跳一下。 */
+    el.innerHTML = '<div class="bm-marquee"><div class="bm-track">' +
+      '<div class="bm-seq">' + bookmarkImgs(false) + '</div>' +
+      '<div class="bm-seq" aria-hidden="true">' + bookmarkImgs(false) + '</div>' +
+      '</div></div>';
+
+    var box = el.querySelector('.bm-marquee');
+    var track = el.querySelector('.bm-track');
+    if (!box || !track || REDUCED) return;
+
+    /* 位移距离 = 单个 seq 的宽度。用 offsetWidth 而非 scrollWidth，
+       后者在 transform 生效时会把位移算进去，产生反馈抖动。 */
+    function setDuration() {
+      var seq = track.querySelector('.bm-seq');
+      var w = seq ? seq.offsetWidth : 0;
+      if (w > 0) {
+        track.style.setProperty('--bm-dur', (w / 55).toFixed(2) + 's');
+        box.classList.add('is-animating');
+      }
+    }
+
+    /* 等全部图片解码完成再开跑：否则轨道宽度会随图片逐张加载而变化，
+       位移距离与真实周期对不上，循环末尾出现接缝。 */
+    var imgs = track.querySelectorAll('img');
+    var pending = imgs.length, started = false;
+    function ready() {
+      if (started) return;
+      started = true;
+      setDuration();
+      window.addEventListener('resize', setDuration);
+    }
+    if (!pending) { ready(); return; }
+    Array.prototype.forEach.call(imgs, function (im) {
+      if (im.complete && im.naturalWidth) { if (--pending === 0) ready(); return; }
+      var done = function () { if (--pending === 0) ready(); };
+      im.addEventListener('load', done);
+      im.addEventListener('error', done);
+    });
+  }
+
+  /* 详情页 hero：书签轮播。
+     原为「拖动 + scroll-snap」横滚画廊，实测两个问题：
+       1) pointerleave 会在指针仍按住移出时触发 release，把 snap 重新打开，
+          与仍在进行的 pointermove 抢scrollLeft，手感是"停不下来"；
+       2) snap-align:center 与"看完整系列"的意图冲突，每张停一下反而像卡顿。
+     故改为与首页卡片同一套无缝自动轮播：两份 .bm-seq + translateX(-50%)，
+     匀速、无停顿、无交互态，自然不存在"停不下来"。 */
+  function buildBookmarkGallery(el) {
+    el.innerHTML = '<span class="bm-gallery-hint">' +
+      (EN ? '5 bookmarks · auto-scrolling' : '中轴线书签 5 张 · 自动轮播') + '</span>' +
+      '<div class="bm-marquee bm-marquee--gallery"><div class="bm-track">' +
+        '<div class="bm-seq">' + bookmarkImgs(false) + '</div>' +
+        '<div class="bm-seq" aria-hidden="true">' + bookmarkImgs(false) + '</div>' +
+      '</div></div>';
+
+    var box = el.querySelector('.bm-marquee');
+    var track = el.querySelector('.bm-track');
+    if (!box || !track) return;
+
+    /* 位移距离 = 单个 seq 宽度；用 offsetWidth 而非 scrollWidth，
+       后者在 transform 生效时会把位移算进去，产生反馈抖动。 */
+    function setDuration() {
+      var seq = track.querySelector('.bm-seq');
+      var w = seq ? seq.offsetWidth : 0;
+      if (w > 0) {
+        track.style.setProperty('--bm-dur', (w / 55).toFixed(2) + 's');
+        box.classList.add('is-animating');
+      }
+    }
+
+    /* 等图片解码完成再开跑，否则轨道宽度随加载变化，循环末尾出现接缝 */
+    var imgs = track.querySelectorAll('img');
+    var pending = imgs.length, started = false;
+    function ready() {
+      if (started) return;
+      started = true;
+      setDuration();
+      window.addEventListener('resize', setDuration);
+    }
+    if (REDUCED || !pending) { setDuration(); return; }
+    Array.prototype.forEach.call(imgs, function (im) {
+      if (im.complete && im.naturalWidth) { if (--pending === 0) ready(); return; }
+      var done = function () { if (--pending === 0) ready(); };
+      im.addEventListener('load', done);
+      im.addEventListener('error', done);
+    });
+  }
+
   /* ---------- viz 装配 ---------- */
 
   var builders = {
     nl2sql: buildNl2sql,
     schedule: buildSchedule,
-    'lobster-mini': buildLobsterMini
+    'lobster-mini': buildLobsterMini,
+    rag: buildRag,
+    'bookmark-marquee': buildBookmarkMarquee,
+    'bookmark-gallery': buildBookmarkGallery
   };
 
   document.querySelectorAll('[data-viz]').forEach(function (el) {
