@@ -297,24 +297,29 @@ a {
   aspect-ratio: 16 / 10;
   background: var(--bg-soft);
   overflow: hidden;
+  /* 书签轮播 .bm-marquee 是 absolute 定位，卡片视觉区须为定位上下文 */
+  position: relative;
 }
 
-.feature-card .card-visual img {
+/* 只管直接子 img（静态主视觉）；书签轮播的 img 嵌套在 .bm-track 里，
+   若用后代选择器会覆盖 .bm-track img 的 height:86%/width:auto，
+   导致每张书签被 cover 放大撑满整张卡片。 */
+.feature-card .card-visual > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* 列表卡片主视觉：hover/聚焦微放大 */
-.feature-card .card-visual img,
-.feature-card .card-visual .viz {
+.feature-card .card-visual > img,
+.feature-card .card-visual > .viz {
   transition: transform .3s ease;
 }
 
-.feature-card:hover .card-visual img,
-.feature-card:hover .card-visual .viz,
-.feature-card:focus-visible .card-visual img,
-.feature-card:focus-visible .card-visual .viz {
+.feature-card:hover .card-visual > img,
+.feature-card:hover .card-visual > .viz,
+.feature-card:focus-visible .card-visual > img,
+.feature-card:focus-visible .card-visual > .viz {
   transform: scale(1.02);
 }
 
@@ -2020,12 +2025,12 @@ a {
 /* ---------- 降低动效偏好 ---------- */
 @media (prefers-reduced-motion: reduce) {
   .feature-card, .more-link .arrow,
-  .feature-card .card-visual img,
-  .feature-card .card-visual .viz { transition: none; }
-  .feature-card:hover .card-visual img,
-  .feature-card:hover .card-visual .viz,
-  .feature-card:focus-visible .card-visual img,
-  .feature-card:focus-visible .card-visual .viz { transform: none; }
+  .feature-card .card-visual > img,
+  .feature-card .card-visual > .viz { transition: none; }
+  .feature-card:hover .card-visual > img,
+  .feature-card:hover .card-visual > .viz,
+  .feature-card:focus-visible .card-visual > img,
+  .feature-card:focus-visible .card-visual > .viz { transform: none; }
   .fade-up { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
   .nlf-caret, .nlf-arrow.on, .nlf-dot.working,

@@ -7,6 +7,7 @@
 ## [2026-10-18] — RAG 详情页 hero 换成真实演示视频 + 书签轮播降级提示修正
 
 ### 修复
+- **古建研学卡片书签轮播"一张都看不清"（桌面+移动全坏）**：根因是选择器优先级冲突——`.feature-card .card-visual img`（0,3,0）覆盖了 `.bm-track img`（0,2,0）的 `height:86%/width:auto`，每张书签被 `width:100%; object-fit:cover` 放大裁切撑满整张卡片，视觉上就是一张模糊放大图。修复：卡片主视觉的 img 规则全部改为直接子代选择器（`card-visual > img`，静态封面均为直接子元素，已逐一核对 4 个 HTML），hover 缩放与 reduced-motion 块同步收窄；另补 `.card-visual { position: relative }`（轮播容器是 absolute 定位，需要定位上下文）。无头 Chrome 桌面+移动视口截图确认 5 张书签并排，双时间点像素 diff 确认轮播位移。
 - **古建研学详情页书签轮播的"假故障"**：排查确认移动端布局与动画本身正常（无头 Chrome 移动视口实测 `is-animating` 生效、虚拟时间 2s/8s 截图像素对比确认轨道在位移）。真实诱因是手机系统开启「减弱动态效果 / 移除动画」时，`prefers-reduced-motion` 命中，轮播按无障碍设计自动关闭、退化为手动横滑——但提示语仍写「自动轮播」，看起来像坏了。现提示语随 REDUCED 切换：降级时显示「左右滑动查看」（英文 `swipe to browse`）。
 
 ### 变更
