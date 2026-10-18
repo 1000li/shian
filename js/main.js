@@ -748,8 +748,12 @@
      故改为与首页卡片同一套无缝自动轮播：两份 .bm-seq + translateX(-50%)，
      匀速、无停顿、无交互态，自然不存在"停不下来"。 */
   function buildBookmarkGallery(el) {
-    el.innerHTML = '<span class="bm-gallery-hint">' +
-      (EN ? '5 bookmarks · auto-scrolling' : '中轴线书签 5 张 · 自动轮播') + '</span>' +
+    /* REDUCED（系统"减弱动态效果"）时动画被 CSS 关闭、退化为手动横滑，
+       提示语须如实反映，否则写着"自动轮播"却静止，看起来像坏了。 */
+    var hint = REDUCED
+      ? (EN ? '5 bookmarks · swipe to browse' : '中轴线书签 5 张 · 左右滑动查看')
+      : (EN ? '5 bookmarks · auto-scrolling' : '中轴线书签 5 张 · 自动轮播');
+    el.innerHTML = '<span class="bm-gallery-hint">' + hint + '</span>' +
       '<div class="bm-marquee bm-marquee--gallery"><div class="bm-track">' +
         '<div class="bm-seq">' + bookmarkImgs(false) + '</div>' +
         '<div class="bm-seq" aria-hidden="true">' + bookmarkImgs(false) + '</div>' +

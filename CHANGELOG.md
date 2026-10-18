@@ -4,7 +4,10 @@
 
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
-## [2026-10-18] — RAG 详情页 hero 换成真实演示视频
+## [2026-10-18] — RAG 详情页 hero 换成真实演示视频 + 书签轮播降级提示修正
+
+### 修复
+- **古建研学详情页书签轮播的"假故障"**：排查确认移动端布局与动画本身正常（无头 Chrome 移动视口实测 `is-animating` 生效、虚拟时间 2s/8s 截图像素对比确认轨道在位移）。真实诱因是手机系统开启「减弱动态效果 / 移除动画」时，`prefers-reduced-motion` 命中，轮播按无障碍设计自动关闭、退化为手动横滑——但提示语仍写「自动轮播」，看起来像坏了。现提示语随 REDUCED 切换：降级时显示「左右滑动查看」（英文 `swipe to browse`）。
 
 ### 变更
 - **中/英 `projects/rag.html` 的 hero 由 JS 模拟动画（`data-viz="rag"`）替换为真实演示视频**（96 秒，720p H.264+AAC，2.7MB）：5 段叙事——讲义故事开场、答得出带出处、超纲拒答、v1.0/v1.2 版本对比、技术流程图，配晓晓 TTS 旁白。`<video controls preload="none" poster>`，封面图 `images/rag-demo-poster.webp`（78KB，取版本对比帧）；`preload="none"` 保证不点不加载。
