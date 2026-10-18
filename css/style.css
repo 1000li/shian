@@ -899,6 +899,14 @@ a {
   object-fit: cover;
 }
 
+.detail-hero video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
 /* ---------- 详情页底部展示区 ---------- */
 .showcase { margin-top: 72px; }
 

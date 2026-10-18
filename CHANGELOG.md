@@ -4,6 +4,13 @@
 
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)。
 
+## [2026-10-18] — RAG 详情页 hero 换成真实演示视频
+
+### 变更
+- **中/英 `projects/rag.html` 的 hero 由 JS 模拟动画（`data-viz="rag"`）替换为真实演示视频**（96 秒，720p H.264+AAC，2.7MB）：5 段叙事——讲义故事开场、答得出带出处、超纲拒答、v1.0/v1.2 版本对比、技术流程图，配晓晓 TTS 旁白。`<video controls preload="none" poster>`，封面图 `images/rag-demo-poster.webp`（78KB，取版本对比帧）；`preload="none"` 保证不点不加载。
+- 列表页卡片（首页 / projects / 对应英文页）仍保留原 `rag` 模拟动画不动。
+- 新增 `.detail-hero video` 样式：`object-fit: contain` + 黑底，16:9 视频恰好填满 hero 的 16:9 容器，无黑边。
+
 ## [2026-10-16] — 古建研学详情页书签改为自动轮播 + 精简手册名称
 
 ### 变更
